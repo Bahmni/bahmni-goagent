@@ -1,0 +1,45 @@
+---
+- name: add mysql 5.6 yum repo
+  template:
+    src=mysql.repo.j2
+    dest=/etc/yum.repos.d/mysql.repo
+
+- name: Install python mysql for ansible
+  yum: name=MySQL-python state=present
+
+- name: Check if any version of mysql is present
+  command: mysql --version
+  register: mysqlVersion
+  ignore_errors: true
+
+- name: Uninstall MySQL if 5.6 is absent
+  yum: name={{ item }} state=absent
+  with_items:
+    - mysql-server
+    - mysql
+  when: mysqlVersion|success and mysqlVersion.stdout.find('5.6') == -1
+
+- name: Install mysql from mysql56 yum repository
+  yum: name={{ item }} state=present
+  with_items:
+    - mysql-community-common
+    - mysql-community-libs
+    - mysql-community-client
+    - mysql-community-server
+
+  when: mysqlVersion|failed or mysqlVersion.stdout.find('5.6') == -1
+
+- name: Create /var/log/mysql directory to store binlogs if it does not exist
+  file: path=/var/log/mysql state=directory mode=0755 owner=mysql group=mysql
+
+- name: Stop Mysql Service
+  service: name=mysqld state=stopped
+
+- name: Start Mysql Service
+  service: name=mysqld state=started enabled=true
+
+- name: update mysql root password for all root accounts
+  mysql_user: name=root host=localhost password={{ mysql_password }} state=present
+
+- name: Stop Mysql Service
+  service: name=mysqld state=stopped

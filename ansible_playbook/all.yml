@@ -6,3 +6,5 @@
     - firefox38
     - maven
     - native-build-tools
+    - mysql
+    - postgres
