@@ -38,8 +38,15 @@
 - name: Start Mysql Service
   service: name=mysqld state=started enabled=true
 
+- name: Add root user from anywhere to MySQL
+  command: mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
+
 - name: update mysql root password for all root accounts
-  mysql_user: name=root host=localhost password={{ mysql_password }} state=present
+  mysql_user: name=root host={{ item }} password={{ mysql_password }} sql_log_bin=yes priv=*.*:ALL,GRANT
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - "localhost"
 
 - name: Stop Mysql Service
   service: name=mysqld state=stopped
