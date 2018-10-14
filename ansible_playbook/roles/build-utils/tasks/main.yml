@@ -20,6 +20,9 @@
 - name: install i18n
   command: /bin/bash -l -c 'gem install i18n -v 0.7.0'
 
+- name: install compass
+  command: /bin/bash -l -c 'gem install compass'
+
 - name: Install npm
   npm: name=npm@latest global=yes state=present
 

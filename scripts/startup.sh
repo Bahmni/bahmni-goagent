@@ -14,3 +14,8 @@ if [ -f /var/lib/pgsql/.bash_profile ]; then
 else
    echo "File /var/lib/pgsql/.bash_profile does not exist."
 fi
+
+chmod 777 /tmp/.X99-lock
+dbus-uuidgen > /var/lib/dbus/machine-id
+Xvfb :99 & export DISPLAY=:99
+export $(dbus-launch)

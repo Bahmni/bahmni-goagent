@@ -1,8 +1,10 @@
 FROM gocd/gocd-agent-centos-6:v18.8.0
 ARG mysql_password
 RUN echo -e "[bahmni] \nname=Bahmni development repository for RHEL/CentOS 6\nbaseurl=http://repo.mybahmni.org/rpm/bahmni/\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/bahmni.repo \
+    && yum clean all \
     && rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm \
-    && yum -y install epel-release python-pip git sudo wget ansible openssh-server openssh-clients tar yum-plugin-ovl bahmni-installer* java-1.8.0-openjdk-devel \
+    && yum -y install epel-release python-pip git sudo wget ansible openssh-server openssh-clients tar yum-plugin-ovl bahmni-installer* java-1.8.0-openjdk-devel Xvfb firefox \
+    && yum -y groupinstall Fonts \
     && pip install awscli \
     && pip install boto \
     && yum upgrade python-setuptools \
@@ -24,4 +26,5 @@ RUN ansible-playbook -i inventory all.yml --extra-vars="mysql_password=$mysql_pa
 RUN rm -rf $ANSIBLE_PLAYBOOK_PATH
 WORKDIR /
 ADD ./scripts /scripts
-RUN chmod a+x /scripts/*
+RUN chmod a+x /scripts/* \
+    && yum -y install mesa-libGLU* mesa-libGLU*.x86_64 dbus dbus-x11 xorg-x11-fonts* xorg-x11-server-Xvfb
