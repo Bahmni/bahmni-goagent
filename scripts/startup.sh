@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e
 
-chmod 777 /tmp/.X99-lock
-dbus-uuidgen > /var/lib/dbus/machine-id
+echo 'Starting Xvfb ...'
 Xvfb :99 & export DISPLAY=:99
+echo 'Change X99 permission ...'
+chmod 777 /tmp/.X99-lock
+echo 'exporting dbus launch'
 export $(dbus-launch)
+echo 'Adding dbus uuid'
+dbus-uuidgen > /var/lib/dbus/machine-id
+
 
 if [ -f /etc/my.cnf ]; then
    chown -R mysql:mysql /var/lib/mysql

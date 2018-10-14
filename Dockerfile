@@ -4,7 +4,6 @@ RUN echo -e "[bahmni] \nname=Bahmni development repository for RHEL/CentOS 6\nba
     && yum clean all \
     && rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm \
     && yum -y install epel-release python-pip git sudo wget ansible openssh-server openssh-clients tar yum-plugin-ovl bahmni-installer* java-1.8.0-openjdk-devel Xvfb firefox \
-    && yum -y groupinstall Fonts \
     && pip install awscli \
     && pip install boto \
     && yum upgrade python-setuptools \
@@ -25,6 +24,8 @@ RUN ansible-playbook -i inventory all.yml --extra-vars="mysql_password=$mysql_pa
     && bahmni -ilocal install
 RUN rm -rf $ANSIBLE_PLAYBOOK_PATH
 WORKDIR /
+ENV DISPLAY :99
 ADD ./scripts /scripts
 RUN chmod a+x /scripts/* \
-    && yum -y install mesa-libGLU* mesa-libGLU*.x86_64 dbus dbus-x11 xorg-x11-fonts* xorg-x11-server-Xvfb
+    && yum install -y Xvfb xorg-x11-server-Xvfb liberation-mono-fonts liberation-narrow-fonts liberation-sans-fonts liberation-serif-fonts dbus dbus-x11 xorg-x11-fonts* rpm-build  && \
+    mkdir /.cache /.config && chmod 777 /.cache /.config && dbus-uuidgen > /etc/machine-id
