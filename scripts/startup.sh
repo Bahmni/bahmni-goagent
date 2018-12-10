@@ -24,3 +24,15 @@ if [ -f /var/lib/pgsql/.bash_profile ]; then
 else
    echo "File /var/lib/pgsql/.bash_profile does not exist."
 fi
+
+if [ -f /home/go/.m2 ]; then
+   chown -R go:go /home/go
+else
+    echo "Path /home/go/.m2 does not exist."
+fi
+
+if [ -f /bahmni-apk-signing ]; then
+   chown -R go:go /bahmni-apk-signing
+else
+    echo "Folder /bahmni-apk-signing does not exist."
+fi
