@@ -12,10 +12,10 @@
      - make
 
 - name: Add nodejs repository
-  shell: curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -
+  shell: curl -sL https://rpm.nodesource.com/setup_8.x | sudo -E bash -
 
 - name: Install nodejs
-  yum: name=nodejs-6.6.0 state=present
+  yum: name=nodejs-8.12.0 state=present
 
 - name: install i18n
   command: /bin/bash -l -c 'gem install i18n -v 0.7.0'
